@@ -1,4 +1,15 @@
+<FirstWindow>:
+    Button:
+        id: AllNotes
+        text: "Старт"
+        font_size: 20
+        pos_hint: {'x': .25, 'y': .25}
+        size_hint: .5, .5
+        background_color: (0.4471, 0.0706, 0.651, 1)
+        on_release:
+            root.manager.current = 'main'
 <MainWidget>:
+    #grid: firstGrid
     GridLayout:
         cols: 1
         rows: 3
@@ -38,13 +49,14 @@
             pos_hint: {'top': 1}
             size_hint_y: 10
             GridLayout:
+                height:self.minimum_height
                 cols: 1
                 size_hint_y: None
                 padding: 5
                 spacing: 10
-                #TODO: Добавить вывод данных на лейбле и возможность кликать по ним.
                 Button:
-                    id: TextButton
+                    #id: TextButton
+                    text: 'Text'
                     size_hint: 1, None
                     size: 0, 60
                     font_size: 19
@@ -66,8 +78,6 @@
     padding: 5
     spacing: 5
     orientation: 'vertical'
-    header: HeaderNote
-    body: BodyNote
     GridLayout:
         rows: 3
         BoxLayout:
@@ -130,3 +140,22 @@
         on_release:
             root.manager.current = 'main'
 #TODO: Добавить страницу просмотра заметки.
+
+
+#Элемент кнопки
+<MyButton>:
+    id: TextButton
+    anchor_x: 'center'
+    anchor_y: 'bottom'
+    orientation: 'vertical'
+    size_hint: 1, None
+    size: 0, 60
+    background_color: (0, 0.8235, 0.5255, 1)
+    Label:
+        text: "Day"
+        font_size: 19
+        bold: True
+    Label:
+        text: "Temp"
+        font_size: 15
+        italic: True
