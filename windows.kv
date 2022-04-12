@@ -9,10 +9,11 @@
         on_release:
             root.manager.current = 'main'
 <MainWidget>:
-    #grid: firstGrid
+    grid: grid
     GridLayout:
         cols: 1
         rows: 3
+        size_hint_y: 1
         FloatLayout:
             Image:
                 source: 'src/logo.png'
@@ -47,22 +48,17 @@
                     root.manager.current = 'empty'
         ScrollView:
             pos_hint: {'top': 1}
-            size_hint_y: 10
+            size_hint_y: 10 #верстка блоков общая
             GridLayout:
-                height:self.minimum_height
+                id: grid
+                #height:self.minimum_height
                 cols: 1
-                size_hint_y: None
-                padding: 5
+                #TODO: Разобраться с версткой. При увеличении количества элементов меняется ширина элементов. Возможно аффектит на баг в методе MainWidget
+                #проблемный параметр SizeHint. При = 1 скролл не крутится
+                size_hint_y: 1.1
+                padding: 10
                 spacing: 10
-                Button:
-                    #id: TextButton
-                    text: 'Text'
-                    size_hint: 1, None
-                    size: 0, 60
-                    font_size: 19
-                    background_color: (0, 0.8235, 0.5255, 1)
-                    on_release:
-                        root.manager.current = 'empty'
+
         AnchorLayout:
             Button:
                 id: CreateNote
@@ -73,13 +69,17 @@
                 anchor_y: 'bottom'
                 size_hint: .5, 1
                 on_release:
-                    root.manager.current = 'edit'
+                    root.manager.current = 'new'
 <EditTextWidget>:
+    head: HeaderNote
+    body: BodyNote
+    on_pre_enter:
+        root.open_files()
     padding: 5
     spacing: 5
     orientation: 'vertical'
     GridLayout:
-        rows: 3
+        rows: 4
         BoxLayout:
             pos_hint: {'top': 0.92}
             size_hint: 1, 0.07
@@ -104,7 +104,7 @@
                 font_size: 20
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
-                    root.save(HeaderNote, BodyNote)
+                    root.save_edit(HeaderNote, BodyNote)
                     root.manager.current = 'main'
             Button:
                 id: DeleteNote
@@ -113,13 +113,19 @@
                 font_size: 20
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
-                    #TODO: Добавить метод удаления заметки
-                    root.delete(HeaderNote)
+                    root.delete_edit(HeaderNote)
+                    root.manager.current = 'main'
+            Button:
+                id: Back
+                size_hint: 1, 1
+                text: 'Назад'
+                font_size: 20
+                background_color: (0.4471, 0.0706, 0.651, 1)
+                on_release:
                     root.manager.current = 'main'
         BoxLayout:
             pos_hint: {'top': 0.92}
             size_hint: 1, 0.92
-            #orientation: 'hori'
             size: root.width, root.height
             TextInput:
                 id: BodyNote
@@ -139,23 +145,57 @@
         text: 'Вернуться'
         on_release:
             root.manager.current = 'main'
-#TODO: Добавить страницу просмотра заметки.
 
 
-#Элемент кнопки
-<MyButton>:
-    id: TextButton
-    anchor_x: 'center'
-    anchor_y: 'bottom'
+<NewTextWidget>:
+    head: HeaderNote
+    body: BodyNote
+    padding: 5
+    spacing: 5
     orientation: 'vertical'
-    size_hint: 1, None
-    size: 0, 60
-    background_color: (0, 0.8235, 0.5255, 1)
-    Label:
-        text: "Day"
-        font_size: 19
-        bold: True
-    Label:
-        text: "Temp"
-        font_size: 15
-        italic: True
+    GridLayout:
+        rows: 4
+        BoxLayout:
+            pos_hint: {'top': 0.92}
+            size_hint: 1, 0.07
+            size: root.width, root.height
+            TextInput:
+                id: HeaderNote
+                multiline: False
+                font_size: 20
+                hint_text: 'Заголовок заметки'
+                background_color: (0.9804, .9765, 0.9725)
+        BoxLayout:
+            pos_hint: {'top': 1}
+            size_hint: 1, .1
+            padding: 5
+            spacing: 5
+            orientation: 'horizontal'
+            size: root.width, root.height
+            Button:
+                id: SaveNote
+                size_hint: 1, 1
+                text: 'Сохранить'
+                font_size: 20
+                background_color: (0.4471, 0.0706, 0.651, 1)
+                on_release:
+                    root.save_new(HeaderNote, BodyNote)
+                    root.manager.current = 'main'
+            Button:
+                id: Back
+                size_hint: 1, 1
+                text: 'Назад'
+                font_size: 20
+                background_color: (0.4471, 0.0706, 0.651, 1)
+                on_release:
+                    root.manager.current = 'main'
+        BoxLayout:
+            pos_hint: {'top': 0.92}
+            size_hint: 1, 0.92
+            size: root.width, root.height
+            TextInput:
+                id: BodyNote
+                multiline: True
+                font_size: 15
+                hint_text: 'Текст заметки'
+                background_color: (0.9804, .9765, 0.9725, 1)
