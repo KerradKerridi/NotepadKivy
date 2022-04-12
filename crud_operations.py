@@ -1,6 +1,6 @@
 import os
 
-root_path = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
+ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
 
 def save_edit_note(header, body):
     body = body.text
@@ -8,7 +8,7 @@ def save_edit_note(header, body):
     # TODO: Добавить проверку на необходимость создания папки, если нет такой папки у пользователя
     # TODO: Добавить реализацию через относительные пути
     # TODO: Если нет окончания txt то добавлять, либо сохранять в config, как в test.py
-    os.chdir(root_path)
+    os.chdir(ROOT_PATH)
     f = open(f'{header}', 'w', encoding='utf-8')
     f.write(body)
     f.close()
@@ -17,7 +17,7 @@ def save_edit_note(header, body):
 
 def delete_edit_note(header):
     head = header.text
-    path_for_delete = os.path.join(os.path.abspath(root_path), f'{head}')
+    path_for_delete = os.path.join(os.path.abspath(ROOT_PATH), f'{head}')
     os.remove(path_for_delete)
     print('SuccessDelete')
 
@@ -26,18 +26,16 @@ def save_new_note(header, body):
     header = header.text
     # TODO: Добавить проверку на необходимость создания папки, если нет такой папки у пользователя
     # TODO: Добавить реализацию через относительные пути
-    os.chdir(root_path)
+    os.chdir(ROOT_PATH)
     f = open(f'{header}.txt', 'w', encoding='utf-8')
     f.write(body)
     f.close()
     print(header)
     print(body)
 
-
-
 def read_notes():
     # TODO: Сделать через один массив массивов или json
-    files = os.listdir(root_path)
+    files = os.listdir(ROOT_PATH)
     headers = []
     strings = []
 
@@ -45,7 +43,7 @@ def read_notes():
         headers.append(file)
 
     for file in files:
-        f = open(f'{root_path}{file}', 'r', encoding='utf-8')
+        f = open(f'{ROOT_PATH}{file}', 'r', encoding='utf-8')
         string = f.read()
         strings.append(string)
         f.close()
@@ -53,7 +51,7 @@ def read_notes():
     return headers, strings
 
 def count_notes():
-    files = os.listdir(root_path)
+    files = os.listdir(ROOT_PATH)
     headers = []
     for file in files:
         headers.append(file)

@@ -44,9 +44,9 @@ class EditTextWidget(Screen):
     body = ObjectProperty()
 
     def open_files(self):
-        root_path = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
+        ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
         header = self.ids.HeaderNote.text
-        f = open(f'{root_path}{header}', 'r')
+        f = open(f'{ROOT_PATH}{header}', 'r')
         s = f.read()
         self.head.text = header
         self.body.text = s
@@ -69,6 +69,9 @@ class EmptyPage(Screen):
 class FirstWindow(Screen):
     pass
 
+class SettingsWidget(Screen):
+    pass
+
 class NewTextWidget(Screen):
     def save_new(self, head, body):
         crud_operations.save_new_note(head, body)
@@ -84,6 +87,7 @@ class MainApp(App):
         sm.add_widget(EditTextWidget(name='edit'))
         sm.add_widget(EmptyPage(name='empty'))
         sm.add_widget(NewTextWidget(name='new'))
+        sm.add_widget(SettingsWidget(name='settings'))
         return sm
 
 if __name__ == '__main__':

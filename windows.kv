@@ -45,7 +45,7 @@
                 size_hint: .2, 1
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
-                    root.manager.current = 'empty'
+                    root.manager.current = 'settings'
         ScrollView:
             pos_hint: {'top': 1}
             size_hint_y: 10 #верстка блоков общая
@@ -53,9 +53,9 @@
                 id: grid
                 #height:self.minimum_height
                 cols: 1
-                #TODO: Разобраться с версткой. При увеличении количества элементов меняется ширина элементов. Возможно аффектит на баг в методе MainWidget
+                #TODO: Разобраться с версткой. При увеличении количества элементов меняется ширина элементов.
                 #проблемный параметр SizeHint. При = 1 скролл не крутится
-                size_hint_y: 1.1
+                size_hint_y: 2
                 padding: 10
                 spacing: 10
 
@@ -145,8 +145,6 @@
         text: 'Вернуться'
         on_release:
             root.manager.current = 'main'
-
-
 <NewTextWidget>:
     head: HeaderNote
     body: BodyNote
@@ -199,3 +197,39 @@
                 font_size: 15
                 hint_text: 'Текст заметки'
                 background_color: (0.9804, .9765, 0.9725, 1)
+<SettingsWidget>:
+    FloatLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Dark Theme'
+            pos_hint: {'x': .1, 'y': .5}
+            size_hint: .5, .1
+        Switch:
+            id: switchTheme
+            pos_hint: {'x': .3, 'y': .5}
+            size_hint: .5, .1
+        Label:
+            text: 'woooooooooooh' if switchTheme.active else ''
+            pos_hint: {'x': .6, 'y': .5}
+            size_hint: .5, .1
+        Label:
+            text: 'Font Size'
+            pos_hint: {'x': .1, 'y': .3}
+            size_hint: .5, .1
+        Switch:
+            id: switchFont
+            pos_hint: {'x': .3, 'y': .3}
+            size_hint: .5, .1
+        Label:
+            text: 'woooooooooooh' if switchFont.active else ''
+            pos_hint: {'x': .6, 'y': .3}
+            size_hint: .5, .1
+        Button:
+            id: Back
+            pos_hint: {'x': .2, 'y': 0}
+            size_hint: .5, .1
+            text: 'Назад'
+            font_size: 20
+            background_color: (0.4471, 0.0706, 0.651, 1)
+            on_release:
+                root.manager.current = 'main'
