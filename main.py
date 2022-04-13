@@ -1,13 +1,12 @@
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
-from kivy.uix.scrollview import ScrollView
 from kivy.properties import ObjectProperty
 import crud_operations
 
 kv = Builder.load_file("windows.kv")
+kv2 = Builder.load_file("style.kv")
 sm = ScreenManager()
 
 class MainWidget(Screen):
@@ -20,7 +19,8 @@ class MainWidget(Screen):
         head_notes, strings_notes = crud_operations.read_notes()
         print(count_notes)
         for i in range(0, count_notes):
-            button = Button()
+            #TODO: Создать через kivy элемент, и докинуть ему аргумент on_press
+            button = Button(size_hint_y=None, background_color=[0, .8235, .5255, 1])
             button.text = f'{head_notes[i - 1]}'
             self.ids.grid.add_widget(button)
             button.bind(on_press=self.pressed)  # when the button is clicked
@@ -33,6 +33,8 @@ class MainWidget(Screen):
     def on_leave(self):  # Будет вызвана в момент закрытия экрана
         self.ids.grid.clear_widgets()
 
+class NewButton(Button):
+    pass
 
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке

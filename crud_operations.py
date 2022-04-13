@@ -24,8 +24,6 @@ def delete_edit_note(header):
 def save_new_note(header, body):
     body = body.text
     header = header.text
-    # TODO: Добавить проверку на необходимость создания папки, если нет такой папки у пользователя
-    # TODO: Добавить реализацию через относительные пути
     os.chdir(ROOT_PATH)
     f = open(f'{header}.txt', 'w', encoding='utf-8')
     f.write(body)

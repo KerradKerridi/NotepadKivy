@@ -48,14 +48,11 @@
                     root.manager.current = 'settings'
         ScrollView:
             pos_hint: {'top': 1}
-            size_hint_y: 10 #верстка блоков общая
+            size_hint_y: 10
             GridLayout:
                 id: grid
-                #height:self.minimum_height
                 cols: 1
-                #TODO: Разобраться с версткой. При увеличении количества элементов меняется ширина элементов.
-                #проблемный параметр SizeHint. При = 1 скролл не крутится
-                size_hint_y: 2
+                size_hint_y: .2
                 padding: 10
                 spacing: 10
 
