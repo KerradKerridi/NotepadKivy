@@ -195,6 +195,13 @@
                 hint_text: 'Текст заметки'
                 background_color: (0.9804, .9765, 0.9725, 1)
 <SettingsWidget>:
+    canvas.before:
+        Color:
+            rgb: root.rgb
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    switch: switchTheme
     FloatLayout:
         orientation: 'vertical'
         Label:
@@ -205,22 +212,8 @@
             id: switchTheme
             pos_hint: {'x': .3, 'y': .5}
             size_hint: .5, .1
-        Label:
-            text: 'woooooooooooh' if switchTheme.active else ''
-            pos_hint: {'x': .6, 'y': .5}
-            size_hint: .5, .1
-        Label:
-            text: 'Font Size'
-            pos_hint: {'x': .1, 'y': .3}
-            size_hint: .5, .1
-        Switch:
-            id: switchFont
-            pos_hint: {'x': .3, 'y': .3}
-            size_hint: .5, .1
-        Label:
-            text: 'woooooooooooh' if switchFont.active else ''
-            pos_hint: {'x': .6, 'y': .3}
-            size_hint: .5, .1
+            on_touch_down:
+                root.change_theme()
         Button:
             id: Back
             pos_hint: {'x': .2, 'y': 0}

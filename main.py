@@ -1,12 +1,13 @@
 from kivy.app import App
+from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, StringProperty
 import crud_operations
 
 kv = Builder.load_file("windows.kv")
-kv2 = Builder.load_file("style.kv")
+#kv2 = Builder.load_file("style.kv")
 sm = ScreenManager()
 
 class MainWidget(Screen):
@@ -39,11 +40,11 @@ class NewButton(Button):
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке
     # TODO: Если заходим в заметку, начинаем ее корректировать, ТО удалять старую заметку
-    def __init__(self, **kw):
-        super(EditTextWidget, self).__init__(**kw)
-
     head = ObjectProperty()
     body = ObjectProperty()
+
+    def __init__(self, **kw):
+        super(EditTextWidget, self).__init__(**kw)
 
     def open_files(self):
         ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
@@ -72,7 +73,20 @@ class FirstWindow(Screen):
     pass
 
 class SettingsWidget(Screen):
-    pass
+    rgb = [0, 0, 0]
+    change_rgb = [.1, .2, .5]
+    def change_theme(self):
+        #TODO: Реализовать смену фона на всех экранах. Сейчас работает тоьлко на одном
+        if self.switch.active == True:
+            with self.canvas.before:
+                Color(rgb=self.change_rgb)  # rgba might be better
+                Rectangle(size=self.size, pos=self.pos)
+            print('hello')
+        else:
+            with self.canvas.before:
+                Color(rgb=self.rgb)  # rgba might be better
+                Rectangle(size=self.size, pos=self.pos)
+            print('GoodBye')
 
 class NewTextWidget(Screen):
     def save_new(self, head, body):
