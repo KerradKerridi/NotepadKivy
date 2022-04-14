@@ -1,14 +1,12 @@
 from kivy.app import App
-from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty
-import crud_operations
+from kivy.core.window import Window
+import crud_operations, style
 
 kv = Builder.load_file("windows.kv")
-#kv2 = Builder.load_file("style.kv")
-#TODO: Закомментировано до реализации конфига
 sm = ScreenManager()
 
 class MainWidget(Screen):
@@ -43,6 +41,21 @@ class EditTextWidget(Screen):
     # TODO: Если заходим в заметку, начинаем ее корректировать, ТО удалять старую заметку
     head = ObjectProperty()
     body = ObjectProperty()
+    back_button = ObjectProperty()
+    delete_button = ObjectProperty()
+    save_button = ObjectProperty()
+
+    def on_pre_enter(self, *args):
+        if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
+            self.head.background_color = style.input_color_dark()
+            self.body.background_color = style.input_color_dark()
+            self.back_button.background_color, self.delete_button.background_color, self.save_button.background_color = style.button_color_dark()
+            print('light_color')
+        else:
+            self.head.background_color = style.input_color_light()
+            self.body.background_color = style.input_color_light()
+            self.back_button.background_color, self.delete_button.background_color, self.save_button.background_color = style.button_color_light()
+            print('dark_color')
 
     def __init__(self, **kw):
         super(EditTextWidget, self).__init__(**kw)
@@ -74,21 +87,18 @@ class FirstWindow(Screen):
     pass
 
 class SettingsWidget(Screen):
-    rgb = [0, 0, 0]
-    change_rgb = [.1, .2, .5]
+
     def change_theme(self):
-        #TODO: Реализовать смену фона на всех экранах. Вероятно будет делаться как-то через конфиг style.kv и конфиги.
         #TODO: Switch при прокрутке колесика мыши пытается переключаться.
+        #Дефолтная тема, светлая
         if self.switch.active == False:
-            with self.canvas.before:
-                Color(rgb=self.change_rgb)  # rgba might be better
-                Rectangle(size=self.size, pos=self.pos)
-            print('hello')
+            Window.clearcolor = style.main_theme_dark()
+            print(Window.clearcolor)
+            print('dark_color')
         else:
-            with self.canvas.before:
-                Color(rgb=self.rgb)  # rgba might be better
-                Rectangle(size=self.size, pos=self.pos)
-            print('GoodBye')
+            Window.clearcolor = style.main_theme_light()
+            print(Window.clearcolor)
+            print('light_color')
 
 class NewTextWidget(Screen):
     def save_new(self, head, body):
@@ -99,7 +109,6 @@ class NewTextWidget(Screen):
         self.body.text = ''
 
 class MainApp(App):
-
     def build(self):
         sm.add_widget(FirstWindow(name='first'))
         sm.add_widget(MainWidget(name='main'))
@@ -107,7 +116,12 @@ class MainApp(App):
         sm.add_widget(EmptyPage(name='empty'))
         sm.add_widget(NewTextWidget(name='new'))
         sm.add_widget(SettingsWidget(name='settings'))
+        #TODO: В конфиги нужно сохранить параметры цветов
+        MainApp.main_theme(.9, .9, .9, 1)
         return sm
+
+    def main_theme(r, g, b, a):
+        Window.clearcolor = (r, g, b, a)
 
 if __name__ == '__main__':
     MainApp().run()
