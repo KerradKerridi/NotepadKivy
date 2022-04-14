@@ -3,11 +3,12 @@ from kivy.graphics import Color, Rectangle
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty
 import crud_operations
 
 kv = Builder.load_file("windows.kv")
 #kv2 = Builder.load_file("style.kv")
+#TODO: Закомментировано до реализации конфига
 sm = ScreenManager()
 
 class MainWidget(Screen):
@@ -76,8 +77,9 @@ class SettingsWidget(Screen):
     rgb = [0, 0, 0]
     change_rgb = [.1, .2, .5]
     def change_theme(self):
-        #TODO: Реализовать смену фона на всех экранах. Сейчас работает тоьлко на одном
-        if self.switch.active == True:
+        #TODO: Реализовать смену фона на всех экранах. Вероятно будет делаться как-то через конфиг style.kv и конфиги.
+        #TODO: Switch при прокрутке колесика мыши пытается переключаться.
+        if self.switch.active == False:
             with self.canvas.before:
                 Color(rgb=self.change_rgb)  # rgba might be better
                 Rectangle(size=self.size, pos=self.pos)
@@ -97,6 +99,7 @@ class NewTextWidget(Screen):
         self.body.text = ''
 
 class MainApp(App):
+
     def build(self):
         sm.add_widget(FirstWindow(name='first'))
         sm.add_widget(MainWidget(name='main'))
