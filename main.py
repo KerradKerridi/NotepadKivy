@@ -49,12 +49,16 @@ class EditTextWidget(Screen):
         if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
             self.head.background_color = style.input_color_dark()
             self.body.background_color = style.input_color_dark()
-            self.back_button.background_color, self.delete_button.background_color, self.save_button.background_color = style.button_color_dark()
+            self.back_button.background_color = style.button_color_dark()
+            self.delete_button.background_color = style.button_color_dark()
+            self.save_button.background_color = style.button_color_dark()
             print('light_color')
         else:
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            self.back_button.background_color, self.delete_button.background_color, self.save_button.background_color = style.button_color_light()
+            self.back_button.background_color = style.button_color_light()
+            self.delete_button.background_color = style.button_color_light()
+            self.save_button.background_color = style.button_color_light()
             print('dark_color')
 
     def __init__(self, **kw):
