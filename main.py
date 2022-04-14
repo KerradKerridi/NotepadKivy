@@ -6,6 +6,7 @@ from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 import crud_operations, style
 
+
 kv = Builder.load_file("windows.kv")
 sm = ScreenManager()
 
@@ -91,20 +92,42 @@ class FirstWindow(Screen):
     pass
 
 class SettingsWidget(Screen):
+    back_button = ObjectProperty()
 
     def change_theme(self):
         #TODO: Switch при прокрутке колесика мыши пытается переключаться.
         #Дефолтная тема, светлая
         if self.switch.active == False:
             Window.clearcolor = style.main_theme_dark()
+            self.back_button.background_color = style.button_color_dark()
             print(Window.clearcolor)
             print('dark_color')
         else:
             Window.clearcolor = style.main_theme_light()
+            self.back_button.background_color = style.button_color_light()
             print(Window.clearcolor)
             print('light_color')
 
 class NewTextWidget(Screen):
+    back_button = ObjectProperty()
+    save_button = ObjectProperty()
+    head = ObjectProperty()
+    body = ObjectProperty()
+
+    def on_pre_enter(self, *args):
+        if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
+            self.head.background_color = style.input_color_dark()
+            self.body.background_color = style.input_color_dark()
+            self.back_button.background_color = style.button_color_dark()
+            self.save_button.background_color = style.button_color_dark()
+            print('light_color')
+        else:
+            self.head.background_color = style.input_color_light()
+            self.body.background_color = style.input_color_light()
+            self.back_button.background_color = style.button_color_light()
+            self.save_button.background_color = style.button_color_light()
+            print('dark_color')
+
     def save_new(self, head, body):
         crud_operations.save_new_note(head, body)
 
@@ -112,7 +135,7 @@ class NewTextWidget(Screen):
         self.head.text = ''
         self.body.text = ''
 
-class MainApp(App):
+class NotepadApp(App):
     def build(self):
         sm.add_widget(FirstWindow(name='first'))
         sm.add_widget(MainWidget(name='main'))
@@ -121,11 +144,11 @@ class MainApp(App):
         sm.add_widget(NewTextWidget(name='new'))
         sm.add_widget(SettingsWidget(name='settings'))
         #TODO: В конфиги нужно сохранить параметры цветов
-        MainApp.main_theme(.9, .9, .9, 1)
+        NotepadApp.main_theme(.9, .9, .9, 1)
         return sm
 
     def main_theme(r, g, b, a):
         Window.clearcolor = (r, g, b, a)
 
 if __name__ == '__main__':
-    MainApp().run()
+    NotepadApp().run()

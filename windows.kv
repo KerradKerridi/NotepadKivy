@@ -48,13 +48,14 @@
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
                     root.manager.current = 'settings'
-        ScrollView:#TODO: В какой-то момент сломал скролл, экран постоянно тянется к верху
+        ScrollView:
+            #TODO: Size_hint_y странно работает
             pos_hint: {'top': 1}
             size_hint_y: 10
             GridLayout:
                 id: grid
                 cols: 1
-                size_hint_y: .2
+                size_hint_y: 1.5
                 padding: 10
                 spacing: 10
 
@@ -151,7 +152,8 @@
         on_release:
             root.manager.current = 'main'
 <NewTextWidget>:
-    button: Butt
+    back_button: BackButton
+    save_button: SaveButton
     head: HeaderNote
     body: BodyNote
     padding: 5
@@ -177,7 +179,7 @@
             orientation: 'horizontal'
             size: root.width, root.height
             Button:
-                id: Butt
+                id: SaveButton
                 size_hint: 1, 1
                 text: 'Сохранить'
                 font_size: 20
@@ -186,7 +188,7 @@
                     root.save_new(HeaderNote, BodyNote)
                     root.manager.current = 'main'
             Button:
-                id: Butt
+                id: BackButton
                 size_hint: 1, 1
                 text: 'Назад'
                 font_size: 20

@@ -15,11 +15,9 @@ def input_color_light():
     return rgba
 
 def button_color_dark():
-    #rgba = (.1608, .0, .2471, 1)
-    rgba = (0, 0, 0, 0)
+    rgba = (.1608, .0, .2471, 1)
     return rgba
 
 def button_color_light():
-    #rgba = (100/255, 0/255, 155/255, 1)
-    rgba = (1, 1, 1, 1)
+    rgba = (125/255, 0/255, 194/255, 1)
     return rgba
