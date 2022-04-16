@@ -1,11 +1,11 @@
+from kivy.config import Config
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, ListProperty, StringProperty
 from kivy.core.window import Window
 import crud_operations, style
-
 
 kv = Builder.load_file("windows.kv")
 sm = ScreenManager()
@@ -33,9 +33,6 @@ class MainWidget(Screen):
 
     def on_leave(self):  # Будет вызвана в момент закрытия экрана
         self.ids.grid.clear_widgets()
-
-class NewButton(Button):
-    pass
 
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке
@@ -134,6 +131,7 @@ class NewTextWidget(Screen):
     def on_leave(self):
         self.head.text = ''
         self.body.text = ''
+
 
 class NotepadApp(App):
     def build(self):

@@ -16,18 +16,18 @@
         cols: 1
         rows: 3
         size_hint_y: 1
-        FloatLayout:
+        BoxLayout:
+            id: box_layout
             Image:
                 source: 'src/logo.png'
                 pos_hint: {'x': 0, 'y': 0}
-                size_hint: .1, 1
+                size_hint: .3, 1
             Button:
                 id: Butt
                 text: "Сортировка"
                 font_size: 20
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 pos_hint: {'x': .1, 'y': 0}
-                size_hint: .4, 1
                 on_release:
                     root.manager.current = 'empty'
             Button:
@@ -35,7 +35,6 @@
                 text: "Записные книжки"
                 font_size: 20
                 pos_hint: {'x': .5, 'y': 0}
-                size_hint: .3, 1
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
                     root.manager.current = 'empty'
@@ -44,21 +43,18 @@
                 text: "Настройки"
                 font_size: 20
                 pos_hint: {'x': .8, 'y': 0}
-                size_hint: .2, 1
                 background_color: (0.4471, 0.0706, 0.651, 1)
                 on_release:
                     root.manager.current = 'settings'
         ScrollView:
-            #TODO: Size_hint_y странно работает
             pos_hint: {'top': 1}
             size_hint_y: 10
             GridLayout:
                 id: grid
                 cols: 1
-                size_hint_y: 1.5
+                size_hint_y: 1.3
                 padding: 10
                 spacing: 10
-
         AnchorLayout:
             Button:
                 id: Butt
@@ -76,12 +72,14 @@
     save_button: SaveNote
     delete_button: DeleteNote
     back_button: Back
+    grid: grid
     on_pre_enter:
         root.open_files()
     padding: 5
     spacing: 5
     orientation: 'vertical'
     GridLayout:
+        id: grid
         rows: 4
         BoxLayout:
             pos_hint: {'top': 0.92}
@@ -118,7 +116,6 @@
                 on_release:
                     root.delete_edit(HeaderNote)
                     root.manager.current = 'main'
-                    #TODO: переписать все кнопки на один общий шаблон
             Button:
                 id: Back
                 size_hint: 1, 1
