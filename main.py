@@ -1,38 +1,63 @@
 from kivy.config import Config
 from kivy.app import App
 from kivy.lang import Builder
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
 from kivy.properties import ObjectProperty, ListProperty, StringProperty
 from kivy.core.window import Window
 import crud_operations, style
+from uix.buttons import *
 
 kv = Builder.load_file("windows.kv")
 sm = ScreenManager()
 
 class MainWidget(Screen):
+    box_layout = ObjectProperty()
+    anchor_layout = ObjectProperty()
+
     def __init__(self, **kw):
         super(MainWidget, self).__init__(**kw)
 
     def on_pre_enter(self):
         # TODO: LATER: Добавить вывод текста в кнопке, не только заголовка
+        self.ids.anchor_layout.add_widget(BottomButton(text='Создать запись', size_hint=(.5, 1), on_press=self.new_post))
+        self.ids.box_layout.add_widget(DefaultImage(source='src/logo.png'))
+        self.ids.box_layout.add_widget(SortButton(on_press=self.pressed_sort))
+        self.ids.box_layout.add_widget(NotepadButton(on_press=self.pressed_notepad))
+        self.ids.box_layout.add_widget(SettingButton(on_press=self.pressed_settings))
         count_notes = crud_operations.count_notes()
         head_notes, strings_notes = crud_operations.read_notes()
         print(count_notes)
         for i in range(0, count_notes):
-            #TODO: Создать через kivy элемент, и докинуть ему аргумент on_press
-            button = Button(size_hint_y=None, background_color=[0, .8235, .5255, 1])
-            button.text = f'{head_notes[i - 1]}'
+            button = AnotherButton()
+            button.id = i
+            button.head = head_notes[i]
+            button.body = strings_notes[i]
             self.ids.grid.add_widget(button)
-            button.bind(on_press=self.pressed)  # when the button is clicked
+            button.bind(on_press=self.pressed)
+
+    def new_post(self, button):
+        sm.current = 'new'
 
     def pressed(self, button):
         print('successPressedButton')
-        sm.get_screen('edit').ids.HeaderNote.text = button.text
+        sm.get_screen('edit').ids.HeaderNote.text = button.head
         sm.current = 'edit'
+
+    def pressed_sort(self, button):
+        sm.current = 'empty'
+
+    def pressed_notepad(self, button):
+        sm.current = 'empty'
+
+    def pressed_settings(self, button):
+        sm.current = 'settings'
 
     def on_leave(self):  # Будет вызвана в момент закрытия экрана
         self.ids.grid.clear_widgets()
+        self.ids.box_layout.clear_widgets()
+
 
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке
@@ -83,14 +108,24 @@ class EditTextWidget(Screen):
 
 
 class EmptyPage(Screen):
-    pass
+
+    def on_pre_enter(self, *args):
+        self.add_widget(BottomButton(text='Вернуться', on_press=self.press_main))
+
+    def press_main(self, button):
+        sm.current = 'main'
+
 
 class FirstWindow(Screen):
-    pass
+    box = ObjectProperty
+
+    def on_pre_enter(self, *args):
+        pass
 
 class SettingsWidget(Screen):
     back_button = ObjectProperty()
-
+    switch = ObjectProperty()
+    print(switch)
     def change_theme(self):
         #TODO: Switch при прокрутке колесика мыши пытается переключаться.
         #Дефолтная тема, светлая
@@ -98,35 +133,40 @@ class SettingsWidget(Screen):
             Window.clearcolor = style.main_theme_dark()
             self.back_button.background_color = style.button_color_dark()
             print(Window.clearcolor)
-            print('dark_color')
+            return 'Dark_theme'
         else:
             Window.clearcolor = style.main_theme_light()
             self.back_button.background_color = style.button_color_light()
             print(Window.clearcolor)
-            print('light_color')
+            return 'Light_theme'
+
 
 class NewTextWidget(Screen):
-    back_button = ObjectProperty()
-    save_button = ObjectProperty()
+    #back_button = ObjectProperty()
+    #save_button = ObjectProperty()
     head = ObjectProperty()
     body = ObjectProperty()
-
+    #box_layout = ObjectProperty()
     def on_pre_enter(self, *args):
+        #self.ids.box_layout.add_widget(DefaultButton(text='Назад', on_press=self.back_button))
         if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
             self.head.background_color = style.input_color_dark()
             self.body.background_color = style.input_color_dark()
-            self.back_button.background_color = style.button_color_dark()
-            self.save_button.background_color = style.button_color_dark()
+            #self.back_button.background_color = style.button_color_dark()
+            #self.save_button.background_color = style.button_color_dark()
             print('light_color')
         else:
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            self.back_button.background_color = style.button_color_light()
-            self.save_button.background_color = style.button_color_light()
+            #self.back_button.background_color = style.button_color_light()
+            #self.save_button.background_color = style.button_color_light()
             print('dark_color')
 
     def save_new(self, head, body):
         crud_operations.save_new_note(head, body)
+
+    def back_button(self, button):
+        sm.current = 'main'
 
     def on_leave(self):
         self.head.text = ''
@@ -147,6 +187,7 @@ class NotepadApp(App):
 
     def main_theme(r, g, b, a):
         Window.clearcolor = (r, g, b, a)
+
 
 if __name__ == '__main__':
     NotepadApp().run()

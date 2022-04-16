@@ -11,41 +11,14 @@
             root.manager.current = 'main'
 <MainWidget>:
     grid: grid
-    button: Butt
+    box_layout: box_layout
+    anchor_layout: anchor_layout
     GridLayout:
         cols: 1
         rows: 3
-        size_hint_y: 1
         BoxLayout:
             id: box_layout
-            Image:
-                source: 'src/logo.png'
-                pos_hint: {'x': 0, 'y': 0}
-                size_hint: .3, 1
-            Button:
-                id: Butt
-                text: "Сортировка"
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                pos_hint: {'x': .1, 'y': 0}
-                on_release:
-                    root.manager.current = 'empty'
-            Button:
-                id: AllNotes
-                text: "Записные книжки"
-                font_size: 20
-                pos_hint: {'x': .5, 'y': 0}
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.manager.current = 'empty'
-            Button:
-                id: Butt
-                text: "Настройки"
-                font_size: 20
-                pos_hint: {'x': .8, 'y': 0}
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.manager.current = 'settings'
+            orientation: 'horizontal'
         ScrollView:
             pos_hint: {'top': 1}
             size_hint_y: 10
@@ -56,16 +29,9 @@
                 padding: 10
                 spacing: 10
         AnchorLayout:
-            Button:
-                id: Butt
-                text: "Создать запись"
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                anchor_x: 'center'
-                anchor_y: 'bottom'
-                size_hint: .5, 1
-                on_release:
-                    root.manager.current = 'new'
+            id: anchor_layout
+            anchor_x: 'center'
+            anchor_y: 'bottom'
 <EditTextWidget>:
     head: HeaderNote
     body: BodyNote
@@ -135,24 +101,18 @@
                 hint_text: 'Текст заметки'
                 background_color: (0.9804, .9765, 0.9725)
 <EmptyPage>:
-    button: Butt
     padding: 5
     spacing: 5
     orientation: 'vertical'
     Label:
         text: 'В разработке'
         size_hint: 1, .9
-    Button:
-        id: Butt
-        size_hint: 1, .1
-        text: 'Вернуться'
-        on_release:
-            root.manager.current = 'main'
 <NewTextWidget>:
     back_button: BackButton
     save_button: SaveButton
     head: HeaderNote
     body: BodyNote
+    box_layout: box_layout
     padding: 5
     spacing: 5
     orientation: 'vertical'
@@ -169,6 +129,7 @@
                 hint_text: 'Заголовок заметки'
                 background_color: (0.9804, .9765, 0.9725)
         BoxLayout:
+            id: box_layout
             pos_hint: {'top': 1}
             size_hint: 1, .1
             padding: 5
