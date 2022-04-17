@@ -2,6 +2,7 @@ import os
 
 ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
 
+
 def save_edit_note(header, body):
     body = body.text
     header = header.text
@@ -13,11 +14,13 @@ def save_edit_note(header, body):
     f.write(body)
     f.close()
 
+
 def delete_edit_note(header):
     head = header.text
     path_for_delete = os.path.join(os.path.abspath(ROOT_PATH), f'{head}')
     os.remove(path_for_delete)
     print('SuccessDelete')
+
 
 def save_new_note(header, body):
     body = body.text
@@ -26,6 +29,7 @@ def save_new_note(header, body):
     f = open(f'{header}.txt', 'w', encoding='utf-8')
     f.write(body)
     f.close()
+
 
 def read_notes():
     # TODO: Сделать через один массив массивов или json
@@ -50,6 +54,7 @@ def read_notes():
         f.close()
 
     return headers, strings, first_strings
+
 
 def count_notes():
     files = os.listdir(ROOT_PATH)
