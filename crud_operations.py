@@ -12,8 +12,6 @@ def save_edit_note(header, body):
     f = open(f'{header}', 'w', encoding='utf-8')
     f.write(body)
     f.close()
-    print(header)
-    print(body)
 
 def delete_edit_note(header):
     head = header.text
@@ -28,8 +26,6 @@ def save_new_note(header, body):
     f = open(f'{header}.txt', 'w', encoding='utf-8')
     f.write(body)
     f.close()
-    print(header)
-    print(body)
 
 def read_notes():
     # TODO: Сделать через один массив массивов или json

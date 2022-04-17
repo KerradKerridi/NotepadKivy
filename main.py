@@ -1,4 +1,7 @@
-from kivy.config import Config
+import ast
+import os
+
+from kivy.config import Config, ConfigParser
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.label import Label
@@ -65,28 +68,29 @@ class EditTextWidget(Screen):
     # TODO: Нет реализации ctrl+c и ctrl+v
     head = ObjectProperty()
     body = ObjectProperty()
-    back_button = ObjectProperty()
-    delete_button = ObjectProperty()
-    save_button = ObjectProperty()
 
     def on_pre_enter(self, *args):
+        self.open_files()
+        #TODO: LAST IMPORTANT Подумать над тем как выдать им идентификаторы чтобы можно было их перекрашить и к ним обращаться.
+        self.ids.box_layout.add_widget(SaveButton(on_press=self.save_edit))
+        self.ids.box_layout.add_widget(DeleteButton(on_press=self.delete_edit))
+        self.ids.box_layout.add_widget(BackButton(on_press=self.pressed_back))
+
         if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
             self.head.background_color = style.input_color_dark()
             self.body.background_color = style.input_color_dark()
-            self.back_button.background_color = style.button_color_dark()
-            self.delete_button.background_color = style.button_color_dark()
-            self.save_button.background_color = style.button_color_dark()
             print('light_color')
         else:
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            self.back_button.background_color = style.button_color_light()
-            self.delete_button.background_color = style.button_color_light()
-            self.save_button.background_color = style.button_color_light()
             print('dark_color')
 
     def __init__(self, **kw):
         super(EditTextWidget, self).__init__(**kw)
+
+    def pressed_back(self, button):
+        sm.current = 'main'
+
 
     def open_files(self):
         ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
@@ -97,15 +101,22 @@ class EditTextWidget(Screen):
         self.body.text = s
         f.close()
 
-    def save_edit(self, head, body):
+    def save_edit(self, button):
+        head = self.head
+        body = self.body
         crud_operations.save_edit_note(head, body)
+        sm.current = 'main'
 
-    def delete_edit(self, head):
-        crud_operations.delete_edit_note(head)
+    def delete_edit(self, button):
+        header = self.head
+        crud_operations.delete_edit_note(header)
+        sm.current = 'main'
+
 
     def on_leave(self):
         self.head.text = ''
         self.body.text = ''
+        self.ids.box_layout.clear_widgets()
 
 
 class EmptyPage(Screen):
@@ -126,45 +137,40 @@ class FirstWindow(Screen):
 class SettingsWidget(Screen):
     back_button = ObjectProperty()
     switch = ObjectProperty()
-    print(switch)
+
     def change_theme(self):
         #TODO: Switch при прокрутке колесика мыши пытается переключаться.
-        #Дефолтная тема, светлая
+        #TODO: Если switch.active == False, то в Config писать dark_theme. Далее опираясь на это выставлять тему приложения
         if self.switch.active == False:
             Window.clearcolor = style.main_theme_dark()
             self.back_button.background_color = style.button_color_dark()
-            print(Window.clearcolor)
             return 'Dark_theme'
         else:
             Window.clearcolor = style.main_theme_light()
             self.back_button.background_color = style.button_color_light()
-            print(Window.clearcolor)
             return 'Light_theme'
 
-
 class NewTextWidget(Screen):
-    #back_button = ObjectProperty()
-    #save_button = ObjectProperty()
     head = ObjectProperty()
     body = ObjectProperty()
-    #box_layout = ObjectProperty()
     def on_pre_enter(self, *args):
-        #self.ids.box_layout.add_widget(DefaultButton(text='Назад', on_press=self.back_button))
+        self.ids.box_layout.add_widget(SaveButton(on_press=self.save_new))
+        self.ids.box_layout.add_widget(BackButton(on_press=self.back_button))
         if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
             self.head.background_color = style.input_color_dark()
             self.body.background_color = style.input_color_dark()
-            #self.back_button.background_color = style.button_color_dark()
-            #self.save_button.background_color = style.button_color_dark()
             print('light_color')
         else:
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            #self.back_button.background_color = style.button_color_light()
-            #self.save_button.background_color = style.button_color_light()
             print('dark_color')
 
-    def save_new(self, head, body):
+    def save_new(self, button):
+        head = self.head
+        body = self.body
         crud_operations.save_new_note(head, body)
+        sm.current = 'main'
+        print('Success')
 
     def back_button(self, button):
         sm.current = 'main'
@@ -172,9 +178,27 @@ class NewTextWidget(Screen):
     def on_leave(self):
         self.head.text = ''
         self.body.text = ''
+        self.ids.box_layout.clear_widgets()
 
 
 class NotepadApp(App):
+    def __init__(self, **kvargs):
+        super(NotepadApp, self).__init__(**kvargs)
+        self.config = ConfigParser()
+
+    def build_config(self, config):
+        config.adddefaultsection('default')
+        config.setdefault('default', 'theme_application', 'white')
+
+    #def get_application_config(self):
+        #return super(NotepadApp, self).get_application_config(
+        #'{}/%(appname)s.ini'.format(self.directory))
+
+    #def set_value_from_config(self):
+        #self.config.read(os.path.join(self.directory, '%(appname)s.ini'))
+        #self.user_data = ast.literal_eval(self.config.get(
+        #'main_theme', 'white_theme'))
+
     def build(self):
         sm.add_widget(FirstWindow(name='first'))
         sm.add_widget(MainWidget(name='main'))
@@ -188,6 +212,8 @@ class NotepadApp(App):
 
     def main_theme(r, g, b, a):
         Window.clearcolor = (r, g, b, a)
+
+
 
 
 if __name__ == '__main__':

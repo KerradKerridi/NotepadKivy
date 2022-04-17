@@ -35,12 +35,8 @@
 <EditTextWidget>:
     head: HeaderNote
     body: BodyNote
-    save_button: SaveNote
-    delete_button: DeleteNote
-    back_button: Back
     grid: grid
-    on_pre_enter:
-        root.open_files()
+    box_layout: box_layout
     padding: 5
     spacing: 5
     orientation: 'vertical'
@@ -58,38 +54,13 @@
                 hint_text: 'Заголовок заметки'
                 background_color: (0.9804, .9765, 0.9725)
         BoxLayout:
+            id: box_layout
             pos_hint: {'top': 1}
             size_hint: 1, .1
             padding: 5
             spacing: 5
             orientation: 'horizontal'
             size: root.width, root.height
-            Button:
-                id: SaveNote
-                size_hint: 1, 1
-                text: 'Сохранить'
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.save_edit(HeaderNote, BodyNote)
-                    root.manager.current = 'main'
-            Button:
-                id: DeleteNote
-                size_hint: 1, 1
-                text: 'Удалить'
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.delete_edit(HeaderNote)
-                    root.manager.current = 'main'
-            Button:
-                id: Back
-                size_hint: 1, 1
-                text: 'Назад'
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.manager.current = 'main'
         BoxLayout:
             pos_hint: {'top': 0.92}
             size_hint: 1, 0.92
@@ -108,8 +79,6 @@
         text: 'В разработке'
         size_hint: 1, .9
 <NewTextWidget>:
-    back_button: BackButton
-    save_button: SaveButton
     head: HeaderNote
     body: BodyNote
     box_layout: box_layout
@@ -136,23 +105,6 @@
             spacing: 5
             orientation: 'horizontal'
             size: root.width, root.height
-            Button:
-                id: SaveButton
-                size_hint: 1, 1
-                text: 'Сохранить'
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.save_new(HeaderNote, BodyNote)
-                    root.manager.current = 'main'
-            Button:
-                id: BackButton
-                size_hint: 1, 1
-                text: 'Назад'
-                font_size: 20
-                background_color: (0.4471, 0.0706, 0.651, 1)
-                on_release:
-                    root.manager.current = 'main'
         BoxLayout:
             pos_hint: {'top': 0.92}
             size_hint: 1, 0.92

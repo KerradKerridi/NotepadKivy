@@ -3,6 +3,7 @@ from kivy.properties import ObjectProperty, ListProperty, StringProperty, ColorP
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
 import main
 from kivy.core.window import Window
@@ -27,6 +28,7 @@ class AnotherButton(ButtonBehavior, BoxLayout):
     id = ObjectProperty()
     head = StringProperty('')
     body = StringProperty('')
+    #print(main.SettingsWidget.change_theme())
     rgba_color = ListProperty([.1, .1, .1, 1])
     #events_callback = ObjectProperty(None)
 
@@ -43,3 +45,12 @@ class SettingButton(DefaultButton):
 
 class NotepadButton(DefaultButton):
     text = 'Записные книжки'
+
+class BackButton(DefaultButton):
+    text = 'Назад'
+
+class DeleteButton(DefaultButton):
+    text = 'Удалить'
+
+class SaveButton(DefaultButton):
+    text = 'Сохранить'
