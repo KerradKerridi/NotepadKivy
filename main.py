@@ -7,6 +7,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 import crud_operations
 import style
+from uix.edit_panel import *
 from uix.buttons import *
 
 kv = Builder.load_file("windows.kv")
@@ -16,6 +17,7 @@ sm = ScreenManager()
 class MainWidget(Screen):
     box_layout = ObjectProperty()
     anchor_layout = ObjectProperty()
+    grid = ObjectProperty()
 
     def __init__(self, **kw):
         super(MainWidget, self).__init__(**kw)
@@ -47,6 +49,9 @@ class MainWidget(Screen):
 
         count_notes = crud_operations.count_notes()
         head_notes, strings_notes, first_strings = crud_operations.read_notes()
+        # WARNING: Костыль. Считаем количество заметок и делим на 4.5(сколько входит по дефолту в экран)
+        self.ids.grid.size_hint_y = count_notes / 4.5
+        print(count_notes / 4.5)
         try:
             for i in range(0, count_notes):
                 button = AnotherButton()
@@ -171,11 +176,6 @@ class EmptyPage(Screen):
 
 class FirstWindow(Screen):
     box = ObjectProperty
-    parent_dir = path.dirname(path.abspath(__file__))
-    print(parent_dir)
-
-    def on_pre_enter(self, *args):
-        pass
 
 
 class SettingsWidget(Screen):

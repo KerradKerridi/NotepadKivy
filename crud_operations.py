@@ -27,7 +27,7 @@ def save_new_note(header, body):
     body = body.text
     header = header.text
     os.chdir(ROOT_PATH)
-    f = open(f'{header}.txt', 'w', encoding='utf-8')
+    f = open(f'{header}', 'w', encoding='utf-8')
     f.write(body)
     f.close()
 
