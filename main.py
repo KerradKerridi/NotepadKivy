@@ -20,20 +20,20 @@ class MainWidget(Screen):
         super(MainWidget, self).__init__(**kw)
 
     def on_pre_enter(self):
-        # TODO: LATER: Добавить вывод текста в кнопке, не только заголовка
         self.ids.anchor_layout.add_widget(BottomButton(text='Создать запись', size_hint=(.5, 1), on_press=self.new_post))
         self.ids.box_layout.add_widget(DefaultImage(source='src/logo.png'))
         self.ids.box_layout.add_widget(SortButton(on_press=self.pressed_sort))
         self.ids.box_layout.add_widget(NotepadButton(on_press=self.pressed_notepad))
         self.ids.box_layout.add_widget(SettingButton(on_press=self.pressed_settings))
         count_notes = crud_operations.count_notes()
-        head_notes, strings_notes = crud_operations.read_notes()
+        head_notes, strings_notes, first_strings = crud_operations.read_notes()
         print(count_notes)
         for i in range(0, count_notes):
             button = AnotherButton()
             button.id = i
             button.head = head_notes[i]
-            button.body = strings_notes[i]
+            button.body = first_strings[i]
+            button.rgba_color = (37/255, 178/255, 0/255, 1)
             self.ids.grid.add_widget(button)
             button.bind(on_press=self.pressed)
 
@@ -62,6 +62,7 @@ class MainWidget(Screen):
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке
     # TODO: Если заходим в заметку, начинаем ее корректировать, ТО удалять старую заметку
+    # TODO: Нет реализации ctrl+c и ctrl+v
     head = ObjectProperty()
     body = ObjectProperty()
     back_button = ObjectProperty()

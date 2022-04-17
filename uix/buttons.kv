@@ -1,15 +1,12 @@
 <AnotherButton>:
     id: root.id
-    #head: head
-    #body: body
-    #spacing: 6
     padding: 5
     orientation: 'vertical'
     #TODO: Вернуться к этому решению с функцией коллбек
     #on_release: root.events_callback()
-    canvas.before:
+    canvas:
         Color:
-            rgba: 0, .8235, .5255, 1
+            rgba: root.rgba_color
         Rectangle:
             pos: self.pos
             size: self.size
@@ -21,6 +18,3 @@
         id: body
         font_size: '18'
         text: root.body
-
-#ЭнаверБаттон, ввести в мэйн.пай в цикл. Посмотреть как работает.
-#ПОпробовать снова через элемент сделать вывод нескольких кнопок, чтобы текст не съезжал.

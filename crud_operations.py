@@ -36,6 +36,7 @@ def read_notes():
     files = os.listdir(ROOT_PATH)
     headers = []
     strings = []
+    first_strings = []
 
     for file in files:
         headers.append(file)
@@ -46,7 +47,13 @@ def read_notes():
         strings.append(string)
         f.close()
 
-    return headers, strings
+    for file in files:
+        f = open(f'{ROOT_PATH}{file}', 'r', encoding='utf-8')
+        first_string = f.readline()
+        first_strings.append(first_string)
+        f.close()
+
+    return headers, strings, first_strings
 
 def count_notes():
     files = os.listdir(ROOT_PATH)
