@@ -11,12 +11,12 @@ kv = Builder.load_file("uix/buttons.kv")
 class DefaultButton(Button):
     pos_hint = {'x': .1, 'y': 0}
     font_size = 20
-    background_color = (125 / 255, 0 / 255, 194 / 255, 1)
+    background_color = (114 / 255, 18 / 255, 167 / 255, 0)
 
 
 class BottomButton(Button):
     font_size = 20
-    background_color = (125 / 255, 0 / 255, 194 / 255, 1)
+    background_color = (114 / 255, 18 / 255, 167 / 255, 0)
     size_hint = .5, .1
     pos_hint = {'x': .25, 'y': 0}
 
@@ -26,6 +26,7 @@ class AnotherButton(ButtonBehavior, BoxLayout):
     head = StringProperty('')
     body = StringProperty('')
     rgba_color = ListProperty([.1, .1, .1, 1])
+    font_color = ListProperty([.1, .1, .1, 1])
     # events_callback = ObjectProperty(None)
 
 

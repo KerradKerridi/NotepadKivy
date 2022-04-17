@@ -1,3 +1,5 @@
+from os import path
+
 from kivy.app import App
 from kivy.config import ConfigParser
 from kivy.core.window import Window
@@ -45,18 +47,22 @@ class MainWidget(Screen):
 
         count_notes = crud_operations.count_notes()
         head_notes, strings_notes, first_strings = crud_operations.read_notes()
-        for i in range(0, count_notes):
-            button = AnotherButton()
-            button.id = i
-            button.head = head_notes[i]
-            button.body = first_strings[i]
-            # TODO: Добавить расцветку
-            if self.app.config.get('default', 'theme_application') == 'light_theme':
-                button.rgba_color = (37 / 255, 178 / 255, 0 / 255, 1)
-            else:
-                button.rgba_color = (15 / 255, 73 / 255, 0 / 255, 1)
-            self.ids.grid.add_widget(button)
-            button.bind(on_press=self.pressed)
+        try:
+            for i in range(0, count_notes):
+                button = AnotherButton()
+                button.id = i
+                button.head = head_notes[i]
+                button.body = first_strings[i]
+                if self.app.config.get('default', 'theme_application') == 'light_theme':
+                    button.rgba_color = (247 / 255, 239 / 255, 212 / 255, 1)
+                    button.font_color = (.1, .1, .1, 1)
+                else:
+                    button.rgba_color = (89 / 255, 68 / 255, 14 / 255, 1)
+                    button.font_color = (.7, .7, .7, 1)
+                self.ids.grid.add_widget(button)
+                button.bind(on_press=self.pressed)
+        except IndexError:
+            pass
 
     @staticmethod
     def new_post(button):
@@ -121,9 +127,10 @@ class EditTextWidget(Screen):
         sm.current = 'main'
 
     def open_files(self):
-        root_path = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
+        parent_dir = path.dirname(path.abspath(__file__))
+        file_path = f'{parent_dir}/notebooks/'
         header = self.ids.HeaderNote.text
-        f = open(f'{root_path}{header}', 'r')
+        f = open(f'{file_path}{header}', 'r')
         s = f.read()
         self.head.text = header
         self.body.text = s
@@ -164,6 +171,8 @@ class EmptyPage(Screen):
 
 class FirstWindow(Screen):
     box = ObjectProperty
+    parent_dir = path.dirname(path.abspath(__file__))
+    print(parent_dir)
 
     def on_pre_enter(self, *args):
         pass
@@ -241,7 +250,6 @@ class NotepadApp(App):
         sm.add_widget(EmptyPage(name='empty'))
         sm.add_widget(NewTextWidget(name='new'))
         sm.add_widget(SettingsWidget(name='settings'))
-        # TODO: В конфиги нужно сохранить параметры цветов
         style.main_theme(.9, .9, .9, 1)
         return sm
 

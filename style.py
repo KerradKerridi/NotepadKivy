@@ -25,6 +25,5 @@ def button_color_light():
     rgba = (125/255, 0/255, 194/255, 1)
     return rgba
 
-
 def main_theme(self, g, b, a):
     Window.clearcolor = (self, g, b, a)

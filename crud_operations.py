@@ -1,14 +1,15 @@
 import os
 
-ROOT_PATH = '/opt/python/PycharmProjects/NotepadForLinux/notebooks/'
-
+PARENT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = f'{PARENT_DIR}/notebooks/'
 
 def save_edit_note(header, body):
     body = body.text
     header = header.text
-    # TODO: Добавить проверку на необходимость создания папки, если нет такой папки у пользователя
-    # TODO: Добавить реализацию через относительные пути
-    # TODO: Если нет окончания txt то добавлять, либо сохранять в config, как в test.py
+    #TODO: Добавить проверку на необходимость создания папки, если нет такой папки у пользователя
+    #TODO: Добавить реализацию через относительные пути
+    #TODO: Если нет окончания txt то добавлять, либо сохранять в config, как в test.py
+    print(ROOT_PATH)
     os.chdir(ROOT_PATH)
     f = open(f'{header}', 'w', encoding='utf-8')
     f.write(body)
@@ -32,8 +33,12 @@ def save_new_note(header, body):
 
 
 def read_notes():
-    # TODO: Сделать через один массив массивов или json
-    files = os.listdir(ROOT_PATH)
+    #TODO: Сделать через один массив массивов или json
+    try:
+        files = os.listdir(ROOT_PATH)
+    except FileNotFoundError:
+        new_dir = os.mkdir(f'{PARENT_DIR}{ROOT_PATH}')
+        files = os.listdir(new_dir)
     headers = []
     strings = []
     first_strings = []
@@ -57,7 +62,11 @@ def read_notes():
 
 
 def count_notes():
-    files = os.listdir(ROOT_PATH)
+    try:
+        files = os.listdir(ROOT_PATH)
+    except FileNotFoundError:
+        new_dir = os.mkdir(f'{ROOT_PATH}')
+        files = os.listdir(new_dir)
     headers = []
     for file in files:
         headers.append(file)
