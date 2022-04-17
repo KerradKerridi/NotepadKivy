@@ -1,13 +1,8 @@
-import ast
-import os
-
-from kivy.config import Config, ConfigParser
+from kivy.config import ConfigParser
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.button import Button
-from kivy.properties import ObjectProperty, ListProperty, StringProperty
+from kivy.properties import ObjectProperty
 from kivy.core.window import Window
 import crud_operations, style
 from uix.buttons import *
@@ -23,20 +18,32 @@ class MainWidget(Screen):
         super(MainWidget, self).__init__(**kw)
 
     def on_pre_enter(self):
-        self.ids.anchor_layout.add_widget(BottomButton(text='Создать запись', size_hint=(.5, 1), on_press=self.new_post))
-        self.ids.box_layout.add_widget(DefaultImage(source='src/logo.png'))
-        self.ids.box_layout.add_widget(SortButton(on_press=self.pressed_sort))
-        self.ids.box_layout.add_widget(NotepadButton(on_press=self.pressed_notepad))
-        self.ids.box_layout.add_widget(SettingButton(on_press=self.pressed_settings))
+        self.app = App.get_running_app()
+        if self.app.config.get('default', 'theme_application') == 'light_theme':
+            self.ids.anchor_layout.add_widget(BottomButton(text='Создать запись', size_hint=(.5, 1), on_press=self.new_post, background_color=style.button_color_light()))
+            self.ids.box_layout.add_widget(DefaultImage(source='src/logo.png'))
+            self.ids.box_layout.add_widget(SortButton(on_press=self.pressed_sort, background_color=style.button_color_light()))
+            self.ids.box_layout.add_widget(NotepadButton(on_press=self.pressed_notepad, background_color=style.button_color_light()))
+            self.ids.box_layout.add_widget(SettingButton(on_press=self.pressed_settings, background_color=style.button_color_light()))
+        else:
+            self.ids.anchor_layout.add_widget(BottomButton(text='Создать запись', size_hint=(.5, 1), on_press=self.new_post, background_color=style.button_color_dark()))
+            self.ids.box_layout.add_widget(DefaultImage(source='src/logo.png'))
+            self.ids.box_layout.add_widget(SortButton(on_press=self.pressed_sort, background_color=style.button_color_dark()))
+            self.ids.box_layout.add_widget(NotepadButton(on_press=self.pressed_notepad, background_color=style.button_color_dark()))
+            self.ids.box_layout.add_widget(SettingButton(on_press=self.pressed_settings, background_color=style.button_color_dark()))
+
         count_notes = crud_operations.count_notes()
         head_notes, strings_notes, first_strings = crud_operations.read_notes()
-        print(count_notes)
         for i in range(0, count_notes):
             button = AnotherButton()
             button.id = i
             button.head = head_notes[i]
             button.body = first_strings[i]
-            button.rgba_color = (37/255, 178/255, 0/255, 1)
+            #TODO: Добавить расцветку
+            if self.app.config.get('default', 'theme_application') == 'light_theme':
+                button.rgba_color = (37/255, 178/255, 0/255, 1)
+            else:
+                button.rgba_color = (15/255, 73/ 255, 0/255, 1)
             self.ids.grid.add_widget(button)
             button.bind(on_press=self.pressed)
 
@@ -64,26 +71,25 @@ class MainWidget(Screen):
 
 class EditTextWidget(Screen):
     # TODO: LATER: Если заметка пустая(заголовок и текст), не давать ее сохранять, выводить модалку об ошибке
-    # TODO: Если заходим в заметку, начинаем ее корректировать, ТО удалять старую заметку
     # TODO: Нет реализации ctrl+c и ctrl+v
     head = ObjectProperty()
     body = ObjectProperty()
 
     def on_pre_enter(self, *args):
         self.open_files()
-        #TODO: LAST IMPORTANT Подумать над тем как выдать им идентификаторы чтобы можно было их перекрашить и к ним обращаться.
-        self.ids.box_layout.add_widget(SaveButton(on_press=self.save_edit))
-        self.ids.box_layout.add_widget(DeleteButton(on_press=self.delete_edit))
-        self.ids.box_layout.add_widget(BackButton(on_press=self.pressed_back))
-
-        if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
-            self.head.background_color = style.input_color_dark()
-            self.body.background_color = style.input_color_dark()
-            print('light_color')
-        else:
+        self.app = App.get_running_app()
+        if self.app.config.get('default', 'theme_application') == 'light_theme':
+            self.ids.box_layout.add_widget(SaveButton(on_press=self.save_edit, background_color = style.button_color_light()))
+            self.ids.box_layout.add_widget(DeleteButton(on_press=self.delete_edit, background_color = style.button_color_light()))
+            self.ids.box_layout.add_widget(BackButton(on_press=self.pressed_back, background_color = style.button_color_light()))
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            print('dark_color')
+        else:
+            self.ids.box_layout.add_widget(SaveButton(on_press=self.save_edit, background_color = style.button_color_dark()))
+            self.ids.box_layout.add_widget(DeleteButton(on_press=self.delete_edit, background_color = style.button_color_dark()))
+            self.ids.box_layout.add_widget(BackButton(on_press=self.pressed_back, background_color = style.button_color_dark()))
+            self.head.background_color = style.input_color_dark()
+            self.body.background_color = style.input_color_dark()
 
     def __init__(self, **kw):
         super(EditTextWidget, self).__init__(**kw)
@@ -122,7 +128,11 @@ class EditTextWidget(Screen):
 class EmptyPage(Screen):
 
     def on_pre_enter(self, *args):
-        self.add_widget(BottomButton(text='Вернуться', on_press=self.press_main))
+        self.app = App.get_running_app()
+        if self.app.config.get('default', 'theme_application') == 'light_theme':
+            self.add_widget(BottomButton(text='Вернуться', on_press=self.press_main, background_color=style.button_color_light()))
+        else:
+            self.add_widget(BottomButton(text='Вернуться', on_press=self.press_main, background_color=style.button_color_dark()))
 
     def press_main(self, button):
         sm.current = 'main'
@@ -142,28 +152,49 @@ class SettingsWidget(Screen):
         #TODO: Switch при прокрутке колесика мыши пытается переключаться.
         #TODO: Если switch.active == False, то в Config писать dark_theme. Далее опираясь на это выставлять тему приложения
         if self.switch.active == False:
+            self.app = App.get_running_app()
+            self.app.config.set('default', 'theme_application', 'dark_theme')
             Window.clearcolor = style.main_theme_dark()
             self.back_button.background_color = style.button_color_dark()
-            return 'Dark_theme'
+            #return 'Dark_theme'
         else:
+            self.app = App.get_running_app()
+            self.app.config.set('default', 'theme_application', 'light_theme')
             Window.clearcolor = style.main_theme_light()
             self.back_button.background_color = style.button_color_light()
-            return 'Light_theme'
+            #return 'Light_theme'
 
 class NewTextWidget(Screen):
     head = ObjectProperty()
     body = ObjectProperty()
     def on_pre_enter(self, *args):
-        self.ids.box_layout.add_widget(SaveButton(on_press=self.save_new))
-        self.ids.box_layout.add_widget(BackButton(on_press=self.back_button))
-        if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
-            self.head.background_color = style.input_color_dark()
-            self.body.background_color = style.input_color_dark()
-            print('light_color')
-        else:
+        self.app = App.get_running_app()
+        # Тут тестируем другой блок
+        if self.app.config.get('default', 'theme_application') == 'light_theme':
             self.head.background_color = style.input_color_light()
             self.body.background_color = style.input_color_light()
-            print('dark_color')
+            self.ids.box_layout.add_widget(SaveButton(on_press=self.save_new, background_color=style.button_color_light()))
+            self.ids.box_layout.add_widget(BackButton(on_press=self.back_button, background_color=style.button_color_light()))
+            #SaveButton().background_color = style.button_color_light()
+            print(self.ids.box_layout.children)
+            #Back_button = self.ids.box_layout.__doc__
+            #Back_button.background_color = style.button_color_light()
+            #self.ids.box_layout.SaveButton.background_color = style.button_color_light()
+            #BackButton().background_color = style.button_color_light()
+        else:
+            self.head.background_color = style.input_color_dark()
+            self.body.background_color = style.input_color_dark()
+            self.ids.box_layout.add_widget(SaveButton(on_press=self.save_new, background_color=style.button_color_dark()))
+            self.ids.box_layout.add_widget(BackButton(on_press=self.back_button, background_color=style.button_color_dark()))
+        #Тут все работало
+        #if Window.clearcolor == [0.18, 0.18, 0.18, 1]:
+            #self.head.background_color = style.input_color_dark()
+            #self.body.background_color = style.input_color_dark()
+            #print('light_color')
+        #else:
+            #self.head.background_color = style.input_color_light()
+            #self.body.background_color = style.input_color_light()
+            #print('dark_color')
 
     def save_new(self, button):
         head = self.head
@@ -188,16 +219,7 @@ class NotepadApp(App):
 
     def build_config(self, config):
         config.adddefaultsection('default')
-        config.setdefault('default', 'theme_application', 'white')
-
-    #def get_application_config(self):
-        #return super(NotepadApp, self).get_application_config(
-        #'{}/%(appname)s.ini'.format(self.directory))
-
-    #def set_value_from_config(self):
-        #self.config.read(os.path.join(self.directory, '%(appname)s.ini'))
-        #self.user_data = ast.literal_eval(self.config.get(
-        #'main_theme', 'white_theme'))
+        config.setdefault('default', 'theme_application', 'light_theme')
 
     def build(self):
         sm.add_widget(FirstWindow(name='first'))
